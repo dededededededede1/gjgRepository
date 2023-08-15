@@ -1,0 +1,109 @@
+package com.TBT.frame;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+public class MyClassPathXmlApplicationContext {
+
+    // 存放解析xml文件中bean的id，和bean的定义信息
+    Map<String,BeanDefinition> beanMap = new HashMap<>();
+
+    // 存放创建的bean对象，key为beanId，value为bean对象
+    Map<String,Object> objectsMap = new HashMap<>();
+
+    public MyClassPathXmlApplicationContext() {
+    }
+
+    public MyClassPathXmlApplicationContext(String xml) {
+        // 1.解析xml文件
+        extractedXml(xml);
+
+        // 2.利用反射创建对象，把创建的对象存储到map中，以beanId为key，以创建的对象为value
+        createBeanObjects();
+    }
+
+    /**
+     * 这个方法利用反射创建对象
+     */
+    private void createBeanObjects() {
+        // 先遍历beanMap，获取到beanId与bean的定义信息
+        Set<Map.Entry<String, BeanDefinition>> entries = beanMap.entrySet();
+        entries.forEach(entry ->{
+            String beanId = entry.getKey();
+            BeanDefinition beanDefinition = entry.getValue();
+
+        });
+    }
+
+    /**
+     * 这个方法用来解析spring的xml文件
+     * @param xmlPath
+     */
+    public void extractedXml(String xmlPath){
+        // 解析xml配置文件，通过配置文件告诉spring容器，需要管理的bean有哪些，
+        // 把解析出来的对象封装到BeanDefinition中
+        // 解析出来的bean存到map集合中，id为key，bean的定义信息为
+        SAXReader reader = new SAXReader();
+
+        // 读取配置文件的路径，并存入输入流中
+        InputStream resourceAsStream = this.getClass().getResourceAsStream(xmlPath);
+
+        try {
+            // 利用dom4j读取输入流，并得到一个document对象
+            Document document = reader.read(resourceAsStream);
+            // 得到文件中的bean的根标签，<beans>
+            Element beans = document.getRootElement();
+            // 利用迭代器遍历所有的bena标签
+            Iterator<Element> beansIterator = beans.elementIterator();
+
+            while (beansIterator.hasNext()){
+                // 获取到每一个bean
+                Element bean = beansIterator.next();
+                // 得到bean标签中的id
+                String beanId = bean.attributeValue("id");
+                // 得到bean标签中的class
+                String beanClass = bean.attributeValue("class");
+//                System.out.println(beanId);
+//                System.out.println(beanClass);
+
+                // 将得到的数据封装
+                // 创建beanDefinition对象封装id和class
+                BeanDefinition beanDefinition = new BeanDefinition();
+                beanDefinition.setBeanId(beanId);
+                beanDefinition.setBeanClass(beanClass);
+
+                // 得到bean标签下的子节点
+                Iterator<Element> beanIter = bean.elementIterator();
+                // 遍历
+                while (beanIter.hasNext()){
+                    Element property = beanIter.next();
+                    // 假设只获取property的name和ref
+                    String name = property.attributeValue("name");
+                    String ref = property.attributeValue("ref");
+                    // 保存
+                    BeanPropertyDefinition propertyDefinition = new BeanPropertyDefinition();
+                    propertyDefinition.setName(name);
+                    propertyDefinition.setRef(ref);
+
+                    // 存入map集合
+                    Map<String, BeanPropertyDefinition> propertyDefinitionMap = beanDefinition.getPropertyDefinitionMap();
+                    propertyDefinitionMap.put(name,propertyDefinition);
+                }
+
+                // 最后，将beanId和bean的定义信息存入大map中
+                beanMap.put(beanId,beanDefinition);
+            }
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+
+    }
+}

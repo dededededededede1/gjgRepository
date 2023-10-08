@@ -202,7 +202,7 @@ public class FormProcessingServlet extends HttpServlet {
 
 JSP中的四大作用域是指在JSP页面中使用的四种不同的存储数据和对象的范围。这些作用域分别是：page、request、session和application。它们之间的主要区别在于它们的生命周期和可访问范围。
 
-1. page作用域：
+1. page作用域： 
 
    page作用域是指在当前JSP页面中有效的范围。在page作用域中存储的数据只在当前页面中可用。当服务器处理完当前页面后，page作用域中的数据就会被销毁。可以使用JSP的内置对象 `pageContext`来设置和获取page作用域的属性。
 
@@ -210,7 +210,7 @@ JSP中的四大作用域是指在JSP页面中使用的四种不同的存储数�
    <% pageContext.setAttribute("key", "value"); %>
    <% String value = (String) pageContext.getAttribute("key"); %>
    ```
-2. request作用域： 
+2. request作用域：
 
    request作用域是指在一次HTTP请求中有效的范围。在request作用域中存储的数据可以在同一次请求中的其他页面（包括被请求页面、被包含页面、被转发页面等）中使用。可以使用JSP的内置对象 `request`来设置和获取request作用域的属性。
 

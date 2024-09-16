@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="D:\VSCode-win32-x64-1.77.3\work\html\js\jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<button>点击</button>
+</body>
+<script>
+
+const firstPromise = new Promise((res, rej) => {
+    setTimeout(res, 500, [{ a: 1 }]);
+});
+const secondPromise = new Promise((res, rej) => {
+    setTimeout(res, 100, [{ n: 2 }]);
+});
+  
+Promise.race([firstPromise, secondPromise]).then(res => {
+    console.log(res)  
+});
+
+
+// let p1 = Promise.resolve('aaa')
+// let p2 = Promise.resolve('bbb')
+// let p3 = Promise.reject('ccc')
+// let p4 = Promise.resolve('ddd')
+// Promise.all([p1, p2, p3, p4]).then(res => {
+//     console.log(res); //返回数组
+// }).catch(err => {
+//     console.log(err);
+// })
+
+
+
+// function Request(index) {
+//   return new Promise(function (resolve,reject) {
+//       $.ajax({
+//         url:"http://localhost:8082/deptController/getDepts",
+//         data:'',
+//         method:"POST",
+//         contentType:"application/json",
+//         dataType:"json",
+//         success:res => {
+//           resolve(res)
+//           console.log(index+"开始");
+//         },
+//         error:err => reject(err)
+//       })
+//   })
+// }
+
+// let obj = {
+//   getRes:async function () {
+//     await Request("1")
+//     console.log("1结束");
+//     await Request("2")
+//     console.log("2结束");
+//     await Request("3")
+//     console.log("3结束");
+//     await Request("4")
+//     console.log("4结束");
+//   }
+// }
+// obj.getRes();
+
+
+// async function fun() {
+//   await Request("1")
+//   console.log("1结束");
+//   await Request("2")
+//   console.log("2结束");
+//   await Request("3")
+//   console.log("3结束");
+//   await Request("4")
+//   console.log("4结束");
+// }
+// fun()
+ 
+
+// function func(thing,time,over){
+//   let promise = new Promise(function(resolve,reject){
+//     setTimeout(function(){
+//       console.log(thing+"结束。。。");
+//       over ? resolve() : reject(thing)
+//     },time)
+//   })
+
+//   return promise;
+// }
+
+
+// Request().then(()=>{
+//   console.log("请求一结束。。。");
+//   Request().then(()=>{
+//     console.log("请求二结束。。。");
+//     Request().then(()=>{
+//       console.log("请求仨结束。。。");
+//       Request().then(()=>{
+//         console.log("请求四结束。。。");
+//       })
+//     })
+//   }).catch((thing) => {
+//     console.log(thing+"失败。。。");
+//   })
+// })
+
+
+
+</script>
+</html>
